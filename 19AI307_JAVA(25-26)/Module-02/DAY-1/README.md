@@ -36,8 +36,8 @@ To write a Java program that creates a class with attributes and demonstrates ob
 ```
 /*
 Program to implement a Class and Objects using Java
-Developed by: H AARON
-RegisterNumber: 212223040001
+Developed by:Eesha Ranka
+RegisterNumber: 212224240040
 */
 ```
 
