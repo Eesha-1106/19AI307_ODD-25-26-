@@ -1,65 +1,95 @@
-# Ex.No:5(D) THREAD PRIORITY
+# Ex.No:5(E) MULTITHREADING -SYNCHRONIZATION
 
 ## QUESTION:
 ```
-Write a java program for set the priority and name of the current thread.Consider two threads t1 and t2
-
-Note : Read the threadname from the User
-
-set the priority as 4 for t1 and set the priority as 2 for t2
+Print "Hello" and "World" alternately from two threads using synchronized blocks.
 ```
 
 ## AIM:
-To develop a Java program that demonstrates **thread priority** by creating two threads, assigning them user-defined names, and setting their priorities.
+To develop a Java program that demonstrates **multithreading with synchronization** by printing `"Hello"` and `"World"` alternately using two threads.
+
 
 ## ALGORITHM :
 1. Start the program.
 2. Import the necessary package `java.util.Scanner` to read input from the user.
-3. Create a class named `Main`.
-4. Inside the `main()` method, create a `Scanner` object.
-5. Read two thread names from the user.
-6. Create two thread objects `t1` and `t2`.
-7. Set the names of the threads using `setName()`.
-8. Set the priority of thread `t1` as `4`.
-9. Set the priority of thread `t2` as `2`.
-10. Display the thread details using `System.out.println()`.
-11. Stop the program.
+3. Create a class `PrintTask` to handle synchronized printing.
+4. Declare a boolean variable `helloTurn` to control the execution order of threads.
+5. Create a synchronized method `printHello()`:
+   - Use a `while` loop to wait if it is not the turn to print `"Hello"`.
+   - Print `"Hello"`.
+   - Change the turn to `"World"`.
+   - Notify the waiting thread.
+6. Create another synchronized method `printWorld()`:
+   - Use a `while` loop to wait if it is not the turn to print `"World"`.
+   - Print `"World"`.
+   - Change the turn to `"Hello"`.
+   - Notify the waiting thread.
+7. Create a class `Main` containing the `main()` method.
+8. Create a `Scanner` object to read the number of times `n`.
+9. Create an object of `PrintTask`.
+10. Create the first thread to call `printHello()` `n` times.
+11. Create the second thread to call `printWorld()` `n` times.
+12. Start both threads.
+13. The threads execute alternately using synchronization.
+14. Stop the program.
 
 ## PROGRAM:
  ```
 /*
-Program to implement a Thread Priority Concept using Java
+Program to implement a Synchronization concept using Java
 Developed by: Eesha Ranka
 RegisterNumber: 212224240040
 */
 
 import java.util.*;
 
-public class Main
-{
-    public static void main(String args[])
-    {
-        Scanner scan = new Scanner(System.in);
-        String name1=scan.nextLine();
-        String name2=scan.nextLine();
-        
-        Thread t1=new Thread();
-        Thread t2=new Thread();
-        
-        t1.setName(name1);
-        t2.setName(name2);
-        t1.setPriority(4);
-        t2.setPriority(2);
-        
-        System.out.println(t1);
-        System.out.println(t2);
+class PrintTask {
+    private boolean helloTurn = true;
+
+    public synchronized void printHello() throws InterruptedException {
+        while (!helloTurn) wait();
+
+        System.out.println("Hello");
+        helloTurn = false;
+        notify();
+    }
+
+    public synchronized void printWorld() throws InterruptedException {
+        while (helloTurn) wait();
+
+        System.out.println("World");
+        helloTurn = true;
+        notify();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+
+        PrintTask task = new PrintTask();
+
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < n; i++)
+                    task.printHello();
+            } catch (Exception e) {}
+        }).start();
+
+        new Thread(() -> {
+            try {
+                for (int i = 0; i < n; i++)
+                    task.printWorld();
+            } catch (Exception e) {}
+        }).start();
     }
 }
 ```
 
 ## OUTPUT:
 
-<img width="787" height="248" alt="image" src="https://github.com/user-attachments/assets/6222efe6-ebd3-4177-a4e8-f1c30c685ddd" />
+<img width="372" height="707" alt="image" src="https://github.com/user-attachments/assets/c3d7f206-cc63-49c6-8a0d-655954d63a28" />
 
 ## RESULT:
-Thus, the Java program demonstrating **setting thread names and priorities for multiple threads** was successfully implemented and executed.
+Thus, the Java program demonstrating **multithreading with synchronization to alternately print "Hello" and "World" using two threads** was successfully implemented and executed.
